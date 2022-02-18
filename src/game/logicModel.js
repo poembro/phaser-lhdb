@@ -756,139 +756,21 @@ var logic = {
         }
         return total
     },
+
+    score_rule: {
+        1: {
+            1:{ 4:2,5:4,6:5,7:8,8:10,9:20,10:30,11:50,12:100,13:200,14:400,15:600,16:1600}, // 级别为1的时候, 1号(白玉),炸了4个得2分
+            2:{ 4:4,5:5,6:10,7:20,8:30,9:50,10:100,11:250,12:500,13:750,14:800,15:1600,16:3200}, // 级别为1的时候, 2号(蓝玉),炸了4个得4分
+            3:{ 4:5,5:10,6:20,7:40,8:80,9:160,10:500,11:1000,12:2000,13:5000,14:6000,15:12000,16:24000}, // 级别为1的时候, 3号(墨玉),炸了4个得4分
+            4:{ 4:10,5:30,6:50,7:60,8:100,9:750,10:1000,11:10000,12:20000,13:50000,14:60000,15:120000,16:240000}, // 级别为1的时候, 4号(翡翠玉),炸了4个得4分
+            5:{ 4:20,5:50,6:100,7:500,8:1000,9:2000,10:5000,11:20000,12:50000,13:60000,14:120000,15:240000,16:480000}, // 级别为1的时候, 5号(红玉),炸了4个得4分
+        },  
+    },
     _handle_score: function(level, color, len) {
-        /*
-        for (var i=0; i<level+3; i++) { //i表示颜色
-            for (var j=4; j<level+12; j++) { //j表示爆炸个数
-                if (i == color && j == len) {
-                    return i
-                } 
-            }
+        if (this.score_rule[level] && this.score_rule[level][color] &&  this.score_rule[level][color][len]) {
+            return this.score_rule[level][color][len]
         }
-        */
-        if (level == 1) {
-            if (color == 1) { //表示白玉 
-                if (len == 4) { //表示炸了4个
-                    return 2
-                } else if(len == 5) {
-                    return 4
-                } else if(len == 6) { 
-                    return 5
-                } else if(len == 7) { 
-                    return 8
-                } else if(len == 8) { 
-                    return 10
-                } else if(len == 9) { 
-                    return 20
-                } else if(len == 10) { 
-                    return 30
-                } else if(len == 11) { 
-                    return 50
-                } else if(len == 12) { 
-                    return 100
-                } else if(len == 13) { 
-                    return 200
-                } else { 
-                    return 400
-                }
-            } else if(color == 2) {
-                if(len == 4) { 
-                    return 4
-                } else if(len == 5) { 
-                    return 5
-                } else if(len == 6) {
-                    return 10
-                } else if(len == 7){ 
-                    return 20
-                } else if(len == 8){ 
-                    return 30
-                } else if(len == 9){ 
-                    return 50
-                } else if(len == 10){ 
-                    return 100
-                } else if(len == 11){ 
-                    return 250
-                } else if(len == 12){ 
-                    return 500
-                } else if(len == 13){ 
-                    return 750
-                } else{ 
-                    return 800
-                }
-            } else if(color == 3) {
-                if(len == 4){ 
-                    return 5
-                } else if(len == 5){ 
-                    return 10
-                } else if(len == 6){ 
-                    return 20
-                } else if(len == 7){ 
-                    return 40
-                } else if(len == 8){ 
-                    return 80
-                } else if(len == 9){ 
-                    return 160
-                } else if(len == 10){ 
-                    return 500
-                } else if(len == 11){ 
-                    return 1000
-                } else if(len == 12){ 
-                    return 2000
-                } else if(len == 13){ 
-                    return 5000
-                } else{ 
-                    return 6000
-                }
-            } else if (color == 4) {
-                if(len == 4){ 
-                    return 10
-                } else if(len == 5){ 
-                    return 30
-                } else if(len == 6){ 
-                    return 50
-                } else if(len == 7){ 
-                    return 60
-                } else if(len == 8){ 
-                    return 100
-                } else if(len == 9){ 
-                    return 750
-                } else if(len == 10){ 
-                    return 1000
-                } else if(len == 11){ 
-                    return 10000 
-                } else if(len == 12){ 
-                    return 20000
-                } else if(len == 13){ 
-                    return 50000
-                } else { 
-                    return 60000
-                }
-            } else if(color == 5) {
-                if(len == 4){
-                    return 20 
-                } else if(len == 5){ 
-                    return 50
-                } else if(len == 6){ 
-                    return 100
-                } else if(len == 7){ 
-                    return 500
-                } else if(len == 8){ 
-                    return 1000
-                } else if(len == 9){ 
-                    return 2000
-                } else if(len == 10){ 
-                    return 5000
-                } else if(len == 11){ 
-                    return 20000
-                } else if(len == 12){ 
-                    return 50000
-                } else if(len == 13){ 
-                    return 60000
-                } else { 
-                    return 80000
-                }
-            }
-        }
+        return 0
     },
 
     //处理爆炸
@@ -911,6 +793,7 @@ var logic = {
                 
                 var len = this._find_color_len(list, gem[b][c]) 
                 var score = this._handle_score(level, gem[b][c], len) 
+                console.log("+++++++改过分数 规则后+++++" , score)
                 obj.push({color:gem[b][c],len:len,score:score})
             }
         }
@@ -938,7 +821,7 @@ var logic = {
                 var tmp =  this.tmpFooterSprite[x][y] 
                 //爆炸动画
                 this._handle_burst_animation(tmp.x, tmp.y)
-                console.log("--------消除 --------->" + tmp.valgem)
+                //console.log("--------消除 --------->" + tmp.valgem)
                 //tmp.destroy() 
                 tmp.setVisible(false)
                 tmp.setActive(false) 
